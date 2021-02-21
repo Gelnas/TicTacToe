@@ -1,16 +1,9 @@
 package com.example.TicTacToe.mapper.model;
 
-import com.example.TicTacToe.dto.response.GamesResponse;
 import com.example.TicTacToe.dto.response.PlayerResponse;
-import com.example.TicTacToe.model.Game;
 import com.example.TicTacToe.model.Player;
-import com.example.TicTacToe.repository.GameRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class PlayerToPlayerResponseConverter implements Converter<Player, PlayerResponse> {

@@ -7,4 +7,9 @@ public interface Urls {
         String PART = "player";
         String FULL = ROOT + PART;
     }
+
+    public interface Game {
+        String PART = "game";
+        String FULL = ROOT + PART;
+    }
 }

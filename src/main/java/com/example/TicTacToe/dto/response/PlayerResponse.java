@@ -38,19 +38,19 @@ public class PlayerResponse {
      * List of player games
      */
     @Schema(description = "List of player games")
-    private final List<GamesResponse> games;
+    private final List<GameResponse> games;
 
     /**
      * Count of player wins
      */
     @Schema(description = "Count of user wins",
             example = "1")
-    private Integer countWins;
+    private final Integer countWins;
 
     /**
      * Count of player defeat
      */
     @Schema(description = "Count of user defeat",
             example = "1")
-    private Integer countDefeat;
+    private final Integer countDefeat;
 }

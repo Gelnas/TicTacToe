@@ -1,5 +1,4 @@
-CREATE TABLE IF NOT EXISTS player
-(
+CREATE TABLE IF NOT EXISTS player (
     id             bigserial        PRIMARY KEY,
     username       varchar(50)      NOT NULL,
     password       varchar(70)      NOT NULL,
@@ -8,19 +7,17 @@ CREATE TABLE IF NOT EXISTS player
     count_defeat   int8             DEFAULT 0,
     created        timestamp        NOT NULL,
     updated        timestamp        NOT NULL
-    );
+);
 
-
-CREATE TABLE IF NOT EXISTS game
-(
+CREATE TABLE IF NOT EXISTS game (
     id             bigserial         PRIMARY KEY,
     status         varchar(11)       NOT NULL,
-    field          integer[][]       NOT NULL,
+    field          varchar(17)       NOT NULL,
     created        timestamp         NOT NULL,
     updated        timestamp         NOT NULL
-    );
-CREATE TABLE IF NOT EXISTS player_game
-(
+);
+
+CREATE TABLE IF NOT EXISTS player_game (
     player_id      bigserial     NOT NULL,
     game_id        bigserial     NOT NULL,
     PRIMARY KEY    (player_id, game_id),
@@ -28,8 +25,7 @@ CREATE TABLE IF NOT EXISTS player_game
     FOREIGN KEY    (game_id)              REFERENCES game(id)
 );
 
-CREATE TABLE IF NOT EXISTS roles
-(
+CREATE TABLE IF NOT EXISTS roles (
     id    bigserial   PRIMARY  KEY,
     role  varchar(30) NOT NULL
 );
@@ -42,14 +38,12 @@ CREATE TABLE IF NOT EXISTS player_roles(
     FOREIGN KEY (role_id)   REFERENCES roles (id)
 );
 
-CREATE TABLE IF NOT EXISTS permission
-(
+CREATE TABLE IF NOT EXISTS permission (
     id         bigserial   PRIMARY KEY,
     permission varchar(20) NOT NULL
 );
 
-
-CREATE TABLE IF NOT EXISTS roles_permission(
+CREATE TABLE IF NOT EXISTS roles_permission (
     role_id   int8  NOT NULL,
     perm_id   int8  NOT NULL,
     PRIMARY  KEY (role_id, perm_id),

@@ -1,6 +1,7 @@
 package com.example.TicTacToe.dto.response;
 
 import com.example.TicTacToe.model.GameStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,21 +12,26 @@ import java.io.Serializable;
  */
 @Data
 @Builder
-public class GamesResponse implements Serializable {
+public class GameResponse implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
      * Unique identifier of the user
      */
-    private Long id;
+    @Schema(description = "an unique identifier",
+            example = "1")
+    private final Long id;
 
     /**
      * Information about game status
      */
-    private GameStatus status;
+    @Schema(description = "game status",
+            example = "IN_PROGRESS")
+    private final GameStatus status;
 
     /**
      * Playing field
      */
-    private Character[][] field;
+    @Schema(description = "Playing field")
+    private final String field;
 }

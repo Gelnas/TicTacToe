@@ -1,6 +1,7 @@
 package com.example.TicTacToe.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -70,7 +71,7 @@ public class Player {
     /**
      * List of games
      */
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(name = "player_game",
             joinColumns = {@JoinColumn(name = "player_id")},
             inverseJoinColumns = {@JoinColumn(name = "game_id")})
@@ -89,6 +90,7 @@ public class Player {
     private Integer countDefeat;
 
     @ManyToMany
+    @JsonManagedReference
     @JoinTable(name = "player_roles",
             joinColumns = @JoinColumn(name = "player_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
