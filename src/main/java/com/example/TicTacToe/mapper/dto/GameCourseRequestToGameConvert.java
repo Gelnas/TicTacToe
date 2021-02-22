@@ -1,6 +1,7 @@
 package com.example.TicTacToe.mapper.dto;
 
 import com.example.TicTacToe.dto.request.GameCourseRequest;
+import com.example.TicTacToe.exception.WrongSymbolException;
 import com.example.TicTacToe.model.Game;
 import com.example.TicTacToe.service.GameService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,9 @@ public class GameCourseRequestToGameConvert implements Converter<GameCourseReque
     }
 
     private String updateField(Long id, String symbol, String coordinates){
+        if(!symbol.equals("x") && !symbol.equals("0")){
+            throw new WrongSymbolException("Нou are using the wrong symbol. Use x or 0");
+        }
         String field = gameService.getById(id).getField();
         String[][] result = gameService.toStringArray(field);
         int x = coordinates.charAt(0) == '0' ? 0 : coordinates.charAt(0) == '1' ? 1 : 2;

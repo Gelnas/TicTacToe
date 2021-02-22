@@ -29,6 +29,7 @@ public class CreateGameRequestToGameConverter implements Converter<CreateGameReq
 
     private List<Player> toPlayerList(CreateGameRequest gameRequest) {
         List<Player> list = new ArrayList<>();
+
         list.add(playerService.getById(gameRequest.getPlayer_id()));
         list.add(playerService.getById(gameRequest.getOpponent_id()));
         return list;

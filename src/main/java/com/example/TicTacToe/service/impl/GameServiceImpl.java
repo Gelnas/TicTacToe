@@ -5,8 +5,10 @@ import com.example.TicTacToe.exception.NotFoundException;
 import com.example.TicTacToe.exception.WrongMoveException;
 import com.example.TicTacToe.model.Game;
 import com.example.TicTacToe.model.GameStatus;
+import com.example.TicTacToe.model.Player;
 import com.example.TicTacToe.repository.GameRepository;
 import com.example.TicTacToe.service.GameService;
+import com.example.TicTacToe.service.PlayerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
@@ -19,6 +21,7 @@ import org.springframework.util.Assert;
 @RequiredArgsConstructor
 public class GameServiceImpl implements GameService {
     private final GameRepository gameRepository;
+    private final PlayerService playerService;
 
     @Transactional(readOnly = true)
     @Override
@@ -38,8 +41,19 @@ public class GameServiceImpl implements GameService {
         Assert.notNull(game, ErrorMessages.NULL_GAME_OBJECT.getErrorMessage());
 
         Game saved = gameRepository.save(game);
+        Player player1 = saved.getPlayers().get(0);
+        Player player2 = saved.getPlayers().get(1);
+        addPlayers(player1, player2, saved);
+
         log.info("Created a new game with id: {}", saved.getId());
         return game;
+    }
+
+    private void addPlayers(Player player1, Player player2, Game game){
+        player1.getGames().add(getById(game.getId()));
+        playerService.update(player1.getId(), player1);
+        player2.getGames().add(getById(game.getId()));
+        playerService.update(player2.getId(), player2);
     }
 
     @Transactional
@@ -54,6 +68,13 @@ public class GameServiceImpl implements GameService {
             throw new WrongMoveException("This cell is already occupied");
         } else {
             game.setStatus(getStatus(game.getField()));
+        }
+
+        if(game.getStatus().equals(GameStatus.WON_PLAYER1)){
+            determiningWinner(fetched.getPlayers().get(0), fetched.getPlayers().get(1));
+        }
+        if(game.getStatus().equals(GameStatus.WON_PLAYER2)){
+            determiningWinner(fetched.getPlayers().get(1), fetched.getPlayers().get(0));
         }
         game.setId(fetched.getId());
         game.setCreated(fetched.getCreated());
@@ -91,6 +112,14 @@ public class GameServiceImpl implements GameService {
             }
         }
         return GameStatus.DRAW;
+    }
+
+    private void determiningWinner(Player player1, Player player2){
+        player1.setCountWins(player1.getCountWins() + 1);
+        player2.setCountDefeat(player2.getCountDefeat() + 1);
+
+        playerService.update(player1.getId(), player1);
+        playerService.update(player2.getId(), player2);
     }
 
     @Override
