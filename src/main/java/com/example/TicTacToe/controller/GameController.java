@@ -3,10 +3,9 @@ package com.example.TicTacToe.controller;
 import com.example.TicTacToe.Urls;
 import com.example.TicTacToe.dto.request.CreateGameRequest;
 import com.example.TicTacToe.dto.request.GameCourseRequest;
-import com.example.TicTacToe.dto.request.PlayerRequest;
 import com.example.TicTacToe.dto.response.GameCourseResponse;
 import com.example.TicTacToe.dto.response.GameResponse;
-import com.example.TicTacToe.dto.response.PlayerResponse;
+import com.example.TicTacToe.dto.response.HistoryGameMovesResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,6 +29,25 @@ import javax.validation.Valid;
 public interface GameController {
     String ID_PATH_VARIABLE = "/{id}";
 
+    @PreAuthorize("hasAuthority('READ')")
+    @Operation(summary = "get a game history by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successful operation",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = GameResponse.class))),
+            @ApiResponse(responseCode = "400", description = "bad request", content = @Content),
+            @ApiResponse(responseCode = "404", description = "not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "internal server error", content = @Content)
+    })
+    @GetMapping(ID_PATH_VARIABLE)
+    ResponseEntity<HistoryGameMovesResponse> getById(
+            @Parameter(
+                    name = "id",
+                    description = "id of the game to be obtained. Cannot be null",
+                    required = true)
+            @PathVariable Long id);
+
     @PreAuthorize("hasAuthority('CREATE')")
     @Operation(summary = "create a new game")
     @ApiResponses(value = {
@@ -39,7 +58,7 @@ public interface GameController {
             @ApiResponse(responseCode = "400", description = "bad request", content = @Content),
             @ApiResponse(responseCode = "500", description = "internal server error", content = @Content)
     })
-    @PostMapping("/create")
+    @PostMapping(Urls.Game.Create.FULL)
     ResponseEntity<GameResponse> create(
             @Parameter(
                     description = "the game to add. Cannot be null.",

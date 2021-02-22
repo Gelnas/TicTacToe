@@ -1,9 +1,11 @@
 package com.example.TicTacToe.controller.impl;
 
 import com.example.TicTacToe.controller.PlayerController;
+import com.example.TicTacToe.dto.request.CreatePlayerRequest;
 import com.example.TicTacToe.dto.request.PlayerRequest;
 import com.example.TicTacToe.dto.response.PlayerPageResponse;
 import com.example.TicTacToe.dto.response.PlayerResponse;
+import com.example.TicTacToe.dto.response.PlayerStatisticsResponse;
 import com.example.TicTacToe.model.Player;
 import com.example.TicTacToe.service.PlayerService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -38,9 +43,19 @@ public class PlayerControllerImpl implements PlayerController {
     }
 
     @Override
-    public ResponseEntity<PlayerResponse> create(@Valid PlayerRequest playerRequest) {
+    public ResponseEntity<PlayerStatisticsResponse> getStatistics() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = ((User)authentication.getPrincipal()).getUsername();
+        Player saved = playerService.getByEmail(email);
+        return ResponseEntity.ok(
+                Objects.requireNonNull(conversionService.convert(saved, PlayerStatisticsResponse.class)));
+    }
+
+    @Override
+    public ResponseEntity<PlayerResponse> create(@Valid CreatePlayerRequest createPlayerRequest) {
         Player saved = playerService.save(
-                conversionService.convert(playerRequest, Player.class));
+                conversionService.convert(createPlayerRequest, Player.class));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(conversionService.convert(saved, PlayerResponse.class));
     }

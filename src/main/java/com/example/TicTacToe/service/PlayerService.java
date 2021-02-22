@@ -8,13 +8,25 @@ import org.springframework.data.domain.Pageable;
 public interface PlayerService {
 
     /**
+     * Method for finding a {@link Player player} by its email.
+     * The input argument should not be null.
+     *
+     * @param email {@link Player player} email
+     * @return {@link Player player} object with unique email like in the argument
+     * @throws IllegalArgumentException if an input id is null
+     * @throws NotFoundException        if there is no {@link Player player} object
+     *                                  with unique email like in the argument
+     */
+    Player getByEmail(String email);
+
+    /**
      * Method for finding a {@link Player player} by its unique identifier.
      * The input argument should not be null.
      *
      * @param id {@link Player player} unique identifier
      * @return {@link Player player} object with unique identifier like in the argument
      * @throws IllegalArgumentException if an input id is null
-     * @throws NotFoundException        if there is no {@link Player player}object
+     * @throws NotFoundException        if there is no {@link Player player} object
      *                                  with unique identifier like in the argument
      */
     Player getById(Long id);

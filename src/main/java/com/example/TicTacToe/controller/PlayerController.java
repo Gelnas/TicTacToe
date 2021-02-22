@@ -1,9 +1,11 @@
 package com.example.TicTacToe.controller;
 
 import com.example.TicTacToe.Urls;
+import com.example.TicTacToe.dto.request.CreatePlayerRequest;
 import com.example.TicTacToe.dto.request.PlayerRequest;
 import com.example.TicTacToe.dto.response.PlayerPageResponse;
 import com.example.TicTacToe.dto.response.PlayerResponse;
+import com.example.TicTacToe.dto.response.PlayerStatisticsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
-
 @Tag(name = "Player")
 @RequestMapping(Urls.Player.FULL)
 public interface PlayerController {
@@ -67,6 +68,40 @@ public interface PlayerController {
                     schema = @Schema(implementation = Pageable.class))
                     Pageable pageable);
 
+    @PreAuthorize("hasAuthority('READ')")
+    @Operation(summary = "get a player's statistics")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successful operation",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PlayerStatisticsResponse.class))),
+            @ApiResponse(responseCode = "400", description = "bad request", content = @Content),
+            @ApiResponse(responseCode = "404", description = "not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "internal server error", content = @Content)
+    })
+    @GetMapping(Urls.Player.Statistics.FULL)
+    ResponseEntity<PlayerStatisticsResponse> getStatistics();
+
+    @PreAuthorize("hasAuthority('READ')")
+    @Operation(summary = "get the top 10 players")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successful operation",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PlayerPageResponse.class))),
+            @ApiResponse(responseCode = "400", description = "bad request", content = @Content),
+            @ApiResponse(responseCode = "500", description = "internal server error", content = @Content)
+    })
+    @GetMapping
+    ResponseEntity<PlayerPageResponse> getSortList(
+            @Parameter(
+                    name = "pageable",
+                    description = "parameters of the page. Cannot be null",
+                    required = true,
+                    schema = @Schema(implementation = Pageable.class))
+                    Pageable pageable);
+
+
     @Operation(summary = "create a new player")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "a player created",
@@ -76,13 +111,13 @@ public interface PlayerController {
             @ApiResponse(responseCode = "400", description = "bad request", content = @Content),
             @ApiResponse(responseCode = "500", description = "internal server error", content = @Content)
     })
-    @PostMapping("/registration")
+    @PostMapping(Urls.Player.Create.FULL)
     ResponseEntity<PlayerResponse> create(
             @Parameter(
                     description = "the player to add. Cannot be null.",
                     required = true,
-                    schema = @Schema(implementation = PlayerRequest.class))
-            @Valid @RequestBody PlayerRequest playerRequest);
+                    schema = @Schema(implementation = CreatePlayerRequest.class))
+            @Valid @RequestBody CreatePlayerRequest createPlayerRequest);
 
     @PreAuthorize("hasAuthority('WRITE')")
     @Operation(summary = "update an existing player")

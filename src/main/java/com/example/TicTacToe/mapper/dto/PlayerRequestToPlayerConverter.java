@@ -8,12 +8,11 @@ public class PlayerRequestToPlayerConverter implements Converter<PlayerRequest, 
 
     @Override
     public Player convert(PlayerRequest playerRequest) {
+
         return Player.builder()
                 .username(playerRequest.getName())
                 .email(playerRequest.getEmail())
                 .password(playerRequest.getPassword())
-                .countDefeat(0)
-                .countWins(0)
                 .build();
     }
 }

@@ -53,19 +53,25 @@ public class PlayerServiceImpl implements PlayerService, UserDetailsService {
         return playerRepository.findAll(pageable);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    @NonNull
+    public Player getByEmail(String email) {
+        Assert.notNull(email, ErrorMessages.NULL_EMAIL.getErrorMessage());
+
+        log.info("Requested the player with : email{}", email);
+        return playerRepository.findByEmail(email);
+    }
+
      @Transactional
      @Override
      @NonNull
-    public Player save(Player player) {
+     public Player save(Player player) {
          Assert.notNull(player, ErrorMessages.NULL_PLAYER_OBJECT.getErrorMessage());
          player.setPassword(passwordEncoder().encode(player.getPassword()));
          Player saved = playerRepository.save(player);
          log.info("Saved a new player with id: {}", saved.getId());
          return saved;
-    }
-
-    private PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder(4);
     }
 
     @Transactional
@@ -76,15 +82,36 @@ public class PlayerServiceImpl implements PlayerService, UserDetailsService {
         Assert.notNull(player, ErrorMessages.NULL_PLAYER_OBJECT.getErrorMessage());
 
         Player fetched = getById(id);
-        player.setId(fetched.getId());
-        player.setCreated(fetched.getCreated());
+        player = completion(fetched, player);
 
         Player updated = playerRepository.save(player);
         log.info("Updated the player with id: {}", updated.getId());
         return updated;
     }
 
+
+    private Player completion(Player fetched, Player player){
+        player.setId(fetched.getId());
+        player.setCreated(fetched.getCreated());
+        player.setCountWins(fetched.getCountWins());
+        player.setCountDefeat(fetched.getCountDefeat());
+        player.setCountDraw(fetched.getCountDraw());
+        if (player.getUsername().equals("")){
+           player.setUsername(fetched.getUsername());
+        }
+        if (player.getPassword().equals("")){
+            player.setPassword(fetched.getPassword());
+        }
+        if (player.getEmail().equals("")){
+            player.setEmail(fetched.getEmail());
+        }
+        return player;
+    }
+
+
+    @Transactional
     @Override
+    @NonNull
     public void delete(Long id) {
         Assert.notNull(id, ErrorMessages.NULL_ID.getErrorMessage());
 
@@ -114,5 +141,9 @@ public class PlayerServiceImpl implements PlayerService, UserDetailsService {
     private Player findByEmail(String email){
         log.info("Requested the player with email: {}", email);
         return playerRepository.findByEmail(email);
+    }
+
+    private PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder(4);
     }
 }

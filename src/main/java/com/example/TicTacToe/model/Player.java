@@ -82,6 +82,12 @@ public class Player {
     @Column(name = "count_defeat")
     private Integer countDefeat;
 
+    /**
+     * Count of games in a draw
+     */
+    @Column(name = "count_draw")
+    private Integer countDraw;
+
     @ManyToMany
     @JoinTable(name = "player_roles",
             joinColumns = @JoinColumn(name = "player_id"),

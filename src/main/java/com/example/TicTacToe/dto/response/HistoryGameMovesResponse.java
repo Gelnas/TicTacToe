@@ -5,14 +5,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 /**
- * Object for transferring data from a controller to a response about player games.
+ * Object for transmitting data from the controller to the response about the history of moves in the game.
  */
 @Data
 @Builder
-public class GameCourseResponse {
+public class HistoryGameMovesResponse {
 
     /**
      * Unique identifier of the user
@@ -35,8 +35,8 @@ public class GameCourseResponse {
     private final String field;
 
     /**
-     * Update time
+     * History of moves
      */
-    @Schema(description = "Update time")
-    private final LocalDateTime updated;
+    private final List<HistoryMovesResponse> historyMovesResponse;
+
 }

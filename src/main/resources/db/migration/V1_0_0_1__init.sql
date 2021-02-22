@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS player (
     email          varchar(60)      NOT NULL     UNIQUE,
     count_wins     int8             DEFAULT 0,
     count_defeat   int8             DEFAULT 0,
+    count_draw     int8             DEFAULT 0,
     created        timestamp        NOT NULL,
     updated        timestamp        NOT NULL
 );
@@ -23,6 +24,15 @@ CREATE TABLE IF NOT EXISTS player_game (
     PRIMARY KEY    (player_id, game_id),
     FOREIGN KEY    (player_id)            REFERENCES player (id),
     FOREIGN KEY    (game_id)              REFERENCES game(id)
+);
+
+CREATE TABLE IF NOT EXISTS history_moves (
+    id             bigserial     NOT NULL,
+    number         varchar(2)    ,
+    position       varchar(2)    ,
+    symbol         varchar(2)    ,
+    game_id        int8          NOT NULL,
+    FOREIGN KEY    (game_id)     REFERENCES game(id)
 );
 
 CREATE TABLE IF NOT EXISTS roles (

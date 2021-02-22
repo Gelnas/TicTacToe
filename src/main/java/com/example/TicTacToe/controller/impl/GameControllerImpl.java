@@ -5,6 +5,7 @@ import com.example.TicTacToe.dto.request.CreateGameRequest;
 import com.example.TicTacToe.dto.request.GameCourseRequest;
 import com.example.TicTacToe.dto.response.GameCourseResponse;
 import com.example.TicTacToe.dto.response.GameResponse;
+import com.example.TicTacToe.dto.response.HistoryGameMovesResponse;
 import com.example.TicTacToe.model.Game;
 import com.example.TicTacToe.service.GameService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,13 @@ import java.util.Objects;
 public class GameControllerImpl implements GameController {
     private final GameService gameService;
     private final ConversionService conversionService;
+
+    @Override
+    public ResponseEntity<HistoryGameMovesResponse> getById(Long id) {
+        Game game = gameService.getById(id);
+        return ResponseEntity.ok(
+                Objects.requireNonNull(conversionService.convert(game, HistoryGameMovesResponse.class)));
+    }
 
     @Override
     public ResponseEntity<GameResponse> create(@Valid CreateGameRequest gameRequest) {

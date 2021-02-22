@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 @Builder
-public class PlayerRequest {
+public class CreatePlayerRequest {
 
     /**
      * Name of the new player
@@ -33,4 +33,11 @@ public class PlayerRequest {
     @Schema(description = "New player's email", required = true)
     @NotNull(message = "The field is required")
     private final String email;
+
+    /**
+     * New player's role
+     */
+    @Schema(description = "New player's role. USER or ADMIN", required = true)
+    @NotNull(message = "The field is required")
+    private final String role;
 }
