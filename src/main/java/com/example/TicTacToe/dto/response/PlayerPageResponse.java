@@ -7,8 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * An object for trancferring data from a controller to a response
- * about a page of players.
+ * An object for trancferring data from a controller to a response about a page of players.
  */
 @Data
 @Builder

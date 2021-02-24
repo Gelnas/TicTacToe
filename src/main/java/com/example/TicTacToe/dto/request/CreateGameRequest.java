@@ -27,5 +27,4 @@ public class CreateGameRequest {
             "then the player wants to play with the computer", example = "1", required = true)
     @NotNull(message = "The field is required")
     private final Long opponent_id;
-
 }

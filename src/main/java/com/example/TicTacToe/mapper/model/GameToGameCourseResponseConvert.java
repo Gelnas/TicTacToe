@@ -6,7 +6,6 @@ import org.springframework.core.convert.converter.Converter;
 
 public class GameToGameCourseResponseConvert implements Converter<Game, GameCourseResponse> {
 
-
     @Override
     public GameCourseResponse convert(Game game) {
         return GameCourseResponse.builder()

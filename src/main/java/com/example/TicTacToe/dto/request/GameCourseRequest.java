@@ -33,5 +33,4 @@ public class GameCourseRequest {
     @Schema(description = "coordinates of the player's turn", example = "22", required = true)
     @NotNull(message = "The field is required")
     private final String coordinates;
-
 }

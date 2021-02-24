@@ -16,6 +16,11 @@ public interface Urls {
             String PART = "statistics";
             String FULL = ROOT  + PART;
         }
+
+        interface Sort {
+            String PART = "sort";
+            String FULL = ROOT  + PART;
+        }
     }
 
     public interface Game {

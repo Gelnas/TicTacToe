@@ -34,5 +34,4 @@ public class CreateGameRequestToGameConverter implements Converter<CreateGameReq
         list.add(playerService.getById(gameRequest.getOpponent_id()));
         return list;
     }
-
 }

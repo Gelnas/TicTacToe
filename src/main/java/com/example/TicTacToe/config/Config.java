@@ -1,9 +1,7 @@
 package com.example.TicTacToe.config;
 
-import com.example.TicTacToe.service.PlayerService;
 import com.example.TicTacToe.service.impl.PlayerServiceImpl;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,12 +28,12 @@ class Config extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/doc/swagger-ui.html").permitAll()
+                .antMatchers("/player/registration").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
                 .httpBasic();
     }
-
 
     protected PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(4);

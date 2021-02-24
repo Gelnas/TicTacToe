@@ -38,7 +38,6 @@ public class CreatePlayerRequestToPlayerConverter implements Converter<CreatePla
         if (role.equals("ADMIN")){
             roles.add(roleService.getById(2L));
         }
-
         return roles;
     }
 }

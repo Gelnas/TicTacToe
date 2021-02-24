@@ -82,13 +82,4 @@ public class Game {
     @UpdateTimestamp
     @Column(name = "updated")
     private LocalDateTime updated;
-
-    public void addMove(HistoryMoves move) {
-        historyMoves.add(move);
-        move.setGame(this);
-    }
-    public void removeMove(HistoryMoves move) {
-        historyMoves.remove(move);
-        move.setGame(null);
-    }
 }

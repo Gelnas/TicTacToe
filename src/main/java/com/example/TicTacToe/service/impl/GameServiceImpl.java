@@ -49,13 +49,6 @@ public class GameServiceImpl implements GameService {
         return game;
     }
 
-    private void addPlayers(Player player1, Player player2, Game game){
-        player1.getGames().add(getById(game.getId()));
-        playerService.update(player1.getId(), player1);
-        player2.getGames().add(getById(game.getId()));
-        playerService.update(player2.getId(), player2);
-    }
-
     @Transactional
     @Override
     @NonNull
@@ -64,6 +57,9 @@ public class GameServiceImpl implements GameService {
         Assert.notNull(game, ErrorMessages.NULL_GAME_OBJECT.getErrorMessage());
 
         Game fetched = getById(id);
+        if(!fetched.getStatus().equals(GameStatus.IN_PROGRESS)){
+            throw new WrongMoveException("You can't make a move. Game over.");
+        }
         if(fetched.getField() == game.getField()){
             throw new WrongMoveException("This cell is already occupied");
         } else {
@@ -82,6 +78,32 @@ public class GameServiceImpl implements GameService {
         Game updated = gameRepository.save(game);
         log.info("Updated the game with id: {}", updated.getId());
         return updated;
+    }
+
+    @Override
+    public String[][] toStringArray(String field){
+        String[][] result = new String[3][3];
+        String[] line = field.split(" ");
+        String[] inter;
+        for (int i = 0; i < 3; i++){
+            inter = line[i].split("~");
+            for (int j = 0; j < 3; j++) {
+                result[i][j] = inter[j];
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public String toString(String[][] field){
+        String result = "";
+        for (int i = 0; i < 3; i++){
+            for (int j = 0; j < 3; j++) {
+                result = j != 2 ?  result + field[i][j] + "~" : result + field[i][j];
+            }
+            result = i != 2 ?  result + " " : result;
+        }
+        return result;
     }
 
     private GameStatus getStatus(String field){
@@ -122,30 +144,10 @@ public class GameServiceImpl implements GameService {
         playerService.update(player2.getId(), player2);
     }
 
-    @Override
-    public String[][] toStringArray(String field){
-        String[][] result = new String[3][3];
-        String[] line = field.split(" ");
-        String[] inter;
-        for (int i = 0; i < 3; i++){
-            inter = line[i].split("~");
-            for (int j = 0; j < 3; j++) {
-                result[i][j] = inter[j];
-            }
-        }
-        return result;
+    private void addPlayers(Player player1, Player player2, Game game){
+        player1.getGames().add(getById(game.getId()));
+        playerService.update(player1.getId(), player1);
+        player2.getGames().add(getById(game.getId()));
+        playerService.update(player2.getId(), player2);
     }
-
-    @Override
-    public String toString(String[][] field){
-        String result = "";
-        for (int i = 0; i < 3; i++){
-            for (int j = 0; j < 3; j++) {
-                result = j != 2 ?  result + field[i][j] + "~" : result + field[i][j];
-            }
-            result = i != 2 ?  result + " " : result;
-        }
-        return result;
-    }
-
 }

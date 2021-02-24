@@ -29,24 +29,16 @@ public class ConversionConfig implements WebMvcConfigurer {
     public void addFormatters(FormatterRegistry registry) {
 
         registry.addConverter(new PlayerRequestToPlayerConverter());
-
         registry.addConverter(new GameToGameResponseConverter());
+        registry.addConverter(new CreateGameRequestToGameConverter(playerService));
+        registry.addConverter(new GameToGameCourseResponseConvert());
+        registry.addConverter(new GameCourseRequestToGameConvert(gameService));
+        registry.addConverter(new PlayerToPlayerStatisticsResponseConverter());
+        registry.addConverter(new GameToHistoryGameMovesResponseConvert());
+        registry.addConverter(new CreatePlayerRequestToPlayerConverter(roleService));
 
         PlayerToPlayerResponseConverter toPlayerResponseConverter = new PlayerToPlayerResponseConverter();
         registry.addConverter(toPlayerResponseConverter);
-
         registry.addConverter(new PlayerPageToPlayerPageResponseConverter(toPlayerResponseConverter));
-
-        registry.addConverter(new CreateGameRequestToGameConverter(playerService));
-
-        registry.addConverter(new GameToGameCourseResponseConvert());
-
-        registry.addConverter(new GameCourseRequestToGameConvert(gameService));
-
-        registry.addConverter(new PlayerToPlayerStatisticsResponseConverter());
-
-        registry.addConverter(new GameToHistoryGameMovesResponseConvert());
-
-        registry.addConverter(new CreatePlayerRequestToPlayerConverter(roleService));
     }
 }

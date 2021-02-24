@@ -32,10 +32,17 @@ public interface PlayerService {
     Player getById(Long id);
 
     /**
+     * Method for getting a sorted page of {@link Player player} .
+     *
+     * @return a page of {@link Player player}
+     */
+    Page<Player> getSortList();
+
+    /**
      * Method for getting a page of {@link Player player} .
      *
-     * @param pageable parameters of resuested page
-     * @return a page of {@link Player player}
+     * @param pageable parameters of requested page
+     * @return a sorted page of {@link Player player}
      */
     Page<Player> getList(Pageable pageable);
 

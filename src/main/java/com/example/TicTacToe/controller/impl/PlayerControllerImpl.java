@@ -53,6 +53,13 @@ public class PlayerControllerImpl implements PlayerController {
     }
 
     @Override
+    public ResponseEntity<PlayerPageResponse> getSortList() {
+        Page<Player> page = playerService.getSortList();
+        return ResponseEntity.ok(
+                Objects.requireNonNull((conversionService.convert(page, PlayerPageResponse.class))));
+    }
+
+    @Override
     public ResponseEntity<PlayerResponse> create(@Valid CreatePlayerRequest createPlayerRequest) {
         Player saved = playerService.save(
                 conversionService.convert(createPlayerRequest, Player.class));

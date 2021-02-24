@@ -17,5 +17,4 @@ public class OpenApiConfig {
                 .title("Tic Tac Toe API")
                 .description("This is Tic Tac Toe REST service"));
     }
-
 }

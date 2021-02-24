@@ -35,8 +35,6 @@ public class PlayerToPlayerResponseConverter implements Converter<Player, Player
         for(Game game : list){
             restList.add(toGameResponse(game));
         }
-
-
         return restList;
     }
 

@@ -45,6 +45,4 @@ public class GameToHistoryGameMovesResponseConvert implements Converter<Game, Hi
                 .symbol(move.getSymbol())
                 .build();
     }
-
-
 }

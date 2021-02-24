@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+
 @Tag(name = "Player")
 @RequestMapping(Urls.Player.FULL)
 public interface PlayerController {
@@ -92,15 +93,8 @@ public interface PlayerController {
             @ApiResponse(responseCode = "400", description = "bad request", content = @Content),
             @ApiResponse(responseCode = "500", description = "internal server error", content = @Content)
     })
-    @GetMapping
-    ResponseEntity<PlayerPageResponse> getSortList(
-            @Parameter(
-                    name = "pageable",
-                    description = "parameters of the page. Cannot be null",
-                    required = true,
-                    schema = @Schema(implementation = Pageable.class))
-                    Pageable pageable);
-
+    @GetMapping(Urls.Player.Sort.FULL)
+    ResponseEntity<PlayerPageResponse> getSortList();
 
     @Operation(summary = "create a new player")
     @ApiResponses(value = {

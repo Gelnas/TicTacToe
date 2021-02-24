@@ -9,7 +9,9 @@ import com.example.TicTacToe.service.PlayerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -44,12 +46,22 @@ public class PlayerServiceImpl implements PlayerService, UserDetailsService {
         return playerRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Not found the player with id " + id));
     }
+
     @Transactional(readOnly = true)
     @Override
     @NonNull
     public Page<Player> getList(Pageable pageable) {
         log.info("Requested player page: {} page, {} size",
                 pageable.getPageNumber(), pageable.getPageSize());
+        return playerRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    @NonNull
+    public Page<Player> getSortList() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("countWins").descending());
+        log.info("Requested player page: 1 page, 10 size");
         return playerRepository.findAll(pageable);
     }
 
@@ -63,15 +75,15 @@ public class PlayerServiceImpl implements PlayerService, UserDetailsService {
         return playerRepository.findByEmail(email);
     }
 
-     @Transactional
-     @Override
-     @NonNull
-     public Player save(Player player) {
-         Assert.notNull(player, ErrorMessages.NULL_PLAYER_OBJECT.getErrorMessage());
-         player.setPassword(passwordEncoder().encode(player.getPassword()));
-         Player saved = playerRepository.save(player);
-         log.info("Saved a new player with id: {}", saved.getId());
-         return saved;
+    @Transactional
+    @Override
+    @NonNull
+    public Player save(Player player) {
+        Assert.notNull(player, ErrorMessages.NULL_PLAYER_OBJECT.getErrorMessage());
+        player.setPassword(passwordEncoder().encode(player.getPassword()));
+        Player saved = playerRepository.save(player);
+        log.info("Saved a new player with id: {}", saved.getId());
+        return saved;
     }
 
     @Transactional
@@ -88,26 +100,6 @@ public class PlayerServiceImpl implements PlayerService, UserDetailsService {
         log.info("Updated the player with id: {}", updated.getId());
         return updated;
     }
-
-
-    private Player completion(Player fetched, Player player){
-        player.setId(fetched.getId());
-        player.setCreated(fetched.getCreated());
-        player.setCountWins(fetched.getCountWins());
-        player.setCountDefeat(fetched.getCountDefeat());
-        player.setCountDraw(fetched.getCountDraw());
-        if (player.getUsername().equals("")){
-           player.setUsername(fetched.getUsername());
-        }
-        if (player.getPassword().equals("")){
-            player.setPassword(fetched.getPassword());
-        }
-        if (player.getEmail().equals("")){
-            player.setEmail(fetched.getEmail());
-        }
-        return player;
-    }
-
 
     @Transactional
     @Override
@@ -145,5 +137,23 @@ public class PlayerServiceImpl implements PlayerService, UserDetailsService {
 
     private PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(4);
+    }
+
+    private Player completion(Player fetched, Player player){
+        player.setId(fetched.getId());
+        player.setCreated(fetched.getCreated());
+        player.setCountWins(fetched.getCountWins());
+        player.setCountDefeat(fetched.getCountDefeat());
+        player.setCountDraw(fetched.getCountDraw());
+        if (player.getUsername().equals("")){
+            player.setUsername(fetched.getUsername());
+        }
+        if (player.getPassword().equals("")){
+            player.setPassword(fetched.getPassword());
+        }
+        if (player.getEmail().equals("")){
+            player.setEmail(fetched.getEmail());
+        }
+        return player;
     }
 }
