@@ -1,6 +1,7 @@
 package com.example.TicTacToe.mapper.dto;
 
 import com.example.TicTacToe.dto.request.CreateGameRequest;
+import com.example.TicTacToe.exception.WrongPlayerException;
 import com.example.TicTacToe.model.Game;
 import com.example.TicTacToe.model.GameStatus;
 import com.example.TicTacToe.model.Player;
@@ -29,9 +30,13 @@ public class CreateGameRequestToGameConverter implements Converter<CreateGameReq
 
     private List<Player> toPlayerList(CreateGameRequest gameRequest) {
         List<Player> list = new ArrayList<>();
-
-        list.add(playerService.getById(gameRequest.getPlayer_id()));
-        list.add(playerService.getById(gameRequest.getOpponent_id()));
+        Long playersId = gameRequest.getPlayer_id();
+        Long opponentId = gameRequest.getOpponent_id();
+        if (playersId == opponentId){
+            throw new WrongPlayerException("you chose yourself as your opponent");
+        }
+        list.add(playerService.getById(playersId));
+        list.add(playerService.getById(opponentId));
         return list;
     }
 }
